@@ -1,0 +1,23 @@
+{
+  "name": "api-projeto-final",
+  "version": "1.0.0",
+  "description": "> O projeto OtakuPass é uma ticketeria para eventos geek, para conectar pessoas que procuram eventos próximos a ela com eventos que precisam de público de forma simples.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+  "dev": "node --watch --env-file=.env src/server.js",
+  "start": "node src/server.js"
+},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MatheusMartinsOliveira/api-projeto-final.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MatheusMartinsOliveira/api-projeto-final/issues"
+  },
+  "homepage": "https://github.com/MatheusMartinsOliveira/api-projeto-final#readme"
+}
