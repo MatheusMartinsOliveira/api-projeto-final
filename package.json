@@ -5,9 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-  "dev": "node --watch --env-file=.env src/server.js",
-  "start": "node src/server.js"
-},
+    "dev": "node --watch --env-file=.env src/server.js",
+    "start": "node src/server.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MatheusMartinsOliveira/api-projeto-final.git"
@@ -15,9 +15,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/MatheusMartinsOliveira/api-projeto-final/issues"
   },
-  "homepage": "https://github.com/MatheusMartinsOliveira/api-projeto-final#readme"
+  "homepage": "https://github.com/MatheusMartinsOliveira/api-projeto-final#readme",
+  "dependencies": {
+    "express": "^5.3.0"
+  }
 }
