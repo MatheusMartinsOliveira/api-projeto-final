@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  email     String   @unique
+  senhaHash String
+  criadoEm  DateTime @default(now())
+
+  @@map("usuarios")
+}
+
+model Categoria {
+  id      Int      @id @default(autoincrement())
+  nome    String   @unique
+  eventos Evento[]
+
+  @@map("categorias")
+}
+
+model Evento {
+  id          Int       @id @default(autoincrement())
+  titulo      String
+  local       String?
+  dataHora    DateTime?
+  capacidade  Int?
+  preco       Decimal   @default(0) @db.Decimal(10, 2)
+  status      String    @default("rascunho")
+  categoriaId Int
+  categoria   Categoria @relation(fields: [categoriaId], references: [id])
+  criadoEm    DateTime  @default(now())
+
+  @@map("eventos")
+}

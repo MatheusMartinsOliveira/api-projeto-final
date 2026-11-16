@@ -1,64 +1,45 @@
-// app.js: monta a aplicação Express (rotas, middlewares).
-// Quem liga o servidor é o server.js. Separar os dois facilita testes e o deploy.
+// app.js: monta a aplicação Express (middlewares e rotas).
 import express from 'express';
+import eventosRoutes from './routes/eventosRoutes.js';
 
 const app = express();
 
-// Permite receber JSON no corpo das requisições (usaremos no próximo encontro)
+// Permite receber JSON no corpo das requisições (req.body)
 app.use(express.json());
 
-// Rota de saúde: usada por serviços de nuvem para saber se a API está viva
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', horario: new Date().toISOString() });
 });
 
-// Rota raiz: apresenta a API
 app.get('/', (req, res) => {
   res.json({
-    nome: 'Aqui eu vou colocar o nome',
-    versao: '0.1.0',
-    rotas: ['GET /health'],
+    nome: 'API Ticketeria EventFlow',
+    versao: '0.2.0',
+    rotas: [
+      'GET /api/eventos',
+      'GET /api/eventos/:id',
+      'POST /api/eventos',
+      'PUT /api/eventos/:id',
+      'DELETE /api/eventos/:id',
+    ],
   });
 });
 
-// Dados em memória (no encontro 4 vão para o PostgreSQL)
-const chamados = [
-  { id: 1, titulo: 'Monitor piscando', prioridade: 'media', status: 'aberto' },
-  { id: 2, titulo: 'Sem internet na doca 3', prioridade: 'alta', status: 'em_andamento' },
-  { id: 3, titulo: 'Senha do ERP bloqueada', prioridade: 'alta', status: 'resolvido' },
-];
+// Todas as rotas de eventos começam com /api/eventos
+app.use('/api/eventos', eventosRoutes);
 
-// Lista
-app.get('/api/chamados', (req, res) => {
-  res.json(chamados);
+// Qualquer rota que não existe: 404 em JSON
+app.use((req, res) => {
+  res.status(404).json({ erro: `Rota ${req.method} ${req.path} não existe` });
 });
 
-const clientes = [
-  {
-    id: 1, nome: "Junior", email: "junior@gmail.com"
-  },
-  {
-    id: 2, nome: "Joao", email: "joao@gmail.com"
-  },
-  {
-    id: 3, nome: "Maria", email: "maria@gmail.com"
+// Tratamento de erros: JSON mal escrito ou falha inesperada (sempre por último)
+app.use((erro, req, res, next) => {
+  if (erro.type === 'entity.parse.failed') {
+    return res.status(400).json({ erro: 'JSON inválido no corpo da requisição' });
   }
-
-]
-
-app.get('/api/clientes', (req, res) => {
-    res.json(clientes);
-  });
-
-app.get('/api/clientes/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  const cliente = clientes.find(c => c.id === id);
-
-  if (cliente) {
-    return res.json(cliente);
-  }
-
-  return res.status(404).json({ error: 'Cliente não encontrado' });
+  console.error(erro);
+  res.status(500).json({ erro: 'Erro interno no servidor' });
 });
 
 export default app;
